@@ -1,0 +1,76 @@
+1. Package Download. 
+- Login to the server and download all the required Packages.
+wget https://dlcdn.apache.org/httpd/httpd-2.4.62.tar.bz2
+wget https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.44/pcre2-10.44.tar.bz2
+wget https://dlcdn.apache.org/apr/apr-util-1.6.3.tar.bz2
+wget https://dlcdn.apache.org/apr/apr-1.7.5.tar.bz2
+
+2. Extract the downloaded files. 
+- Extract all the directories.
+tar -xjf apr-1.7.5.tar.bz2
+tar -xjf apr-util-1.6.3.tar.bz2
+tar -xjf httpd-2.4.62.tar.bz2
+tar -xjf pcre2-10.44.tar.bz2
+
+
+3. Apache Configuration. 
+- For manual installation need to configure all the packages. In the below order.
+Note: In Prefix we mention the path in which we want apache to be configured.
+•	For APR Package
+cd apr-1.7.5/
+./configure --prefix=/opt/apache2/apr
+make
+make install
+•	For APR-UTIL Package
+cd apr-util-1.6.3/
+./configure --prefix=/opt/apache2/apr-util --with-apr=/opt/apache2/apr
+make
+make install
+•	For PCRE Package
+cd pcre2-10.44/
+./configure --prefix=/opt/apache2/pcre
+make
+make install
+•	For HTTPD Package
+cd httpd-2.4.62/
+./configure --prefix=/opt/apache2/ --with-apr=/opt/apache2/apr --with-apr-util=/opt/apache2/apr-util --with-pcre=/opt/apache2/pcre/bin/pcre2-config
+make
+make install
+3. Creation of Service File. 
+- Service file should be created for gracefully auto start and stop of the apache2 service. 
+•	The file has been created in /opt/service_files/ directory.
+vim /opt/service_files/apache2.service
+
+[Unit]
+Description=The Apache HTTP Server
+After=network.target opt.mount
+Requires=opt.mount
+
+[Service]
+Type=forking
+ExecStart=/opt/apache2/bin/apachectl start
+ExecReload=/opt/apache2/bin/apachectl graceful
+ExecStop=/opt/apache2/bin/apachectl stop
+PIDFile=/opt/apache2/logs/httpd.pid
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+•	A softlink has been created in /etc/systemd/system/. 
+cd /etc/systemd/system 
+ln -s /opt/service_files/apache2.service
+•	Start and enable the service file.
+systemctl enable apache2.service
+systemctl start apache2.service
+systemctl status apache2.service
+
+4. Updating the httpd.conf file 
+•	Create a directory in /opt/apache2/conf/virtual_hosts/ and create all the virtual hosts files in it. This will help to manage the configuration files.
+•	Update the below lines in httpd.conf file.
+# Virtual hosts
+Include conf/virtual_hosts/*.conf
+
+Enter On last Line
+Servername localhost
+
+•	Restart the apache2 service.
