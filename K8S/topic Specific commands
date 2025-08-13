@@ -1,0 +1,34 @@
+Cluster --------
+
+
+kubectl config current-context ---> Check Which Cluster You're Connected.
+
+kubectl config get-contexts -->  View All Cluster Contexts (If Multiple)
+
+kubectl cluster-info --> Check Cluster Info
+
+
+Namespace ----------------
+
+
+kubectl get all -n <namespace>
+
+kubectl get namespaces --> List All Namespaces in the Cluster
+
+kubectl get all -n <kube-system>
+
+
+POD  --------------------
+
+kubectl exec -it <pod-name> -n <namespace> -- /bin/sh
+kubectl exec -it <pod-name> -n <namespace> -- /bin/bash
+
+
+kubectl get pods -n <namespace>
+
+kubectl get pods -n <namespace>
+
+kubectl get pods -l app=<pod name>
+
+
+
