@@ -1,0 +1,94 @@
+
+Blue-Green Deployment -
+
+🔧 What It Is:
+You run two full environments:
+	• Blue = current version
+	• Green = new version
+Then, you instantly switch 100% of traffic from Blue to Green once Green is verified.
+✅ Pros:
+	• Zero downtime
+	• Instant rollback (just point traffic back to Blue)
+	• Easy to test new version before switching
+
+
+
+Canary Deployment -
+
+🔧 What It Is:
+You gradually shift traffic to the new version (canary) in phases:
+	1. Start with 5–10% of traffic
+	2. Observe for errors/performance
+	3. Slowly increase to 100%
+✅ Pros:
+	• Lower risk — issues impact only a small % of users
+	• Real-world testing under real load
+	• Can be automated and monitored
+
+
+
+
+
+
+Here's how you can switch traffic from the blue deployment to the green deployment
+	
+	<kubectl edit svc myapp-service>
+	
+	--->  Modify and Re-apply the YAML
+	
+	<>
+	---> kubectl apply -f service.yaml
+	
+	
+	
+	
+	
+	
+	DaemonSet kya hota hai ?
+	
+	🗣️ "DaemonSet ek aisa object hai jo har node pe ek pod ko chalata hai."
+	Matlab:
+	
+	Agar tumhare paas 5 nodes hain, to ek DaemonSet 5 pods banayega — har node pe ek.
+	
+	🧭 Real-life Example:
+	Socho tum ek log collector (Filebeat, Fluentd) lagana chahte ho taaki har node ke logs collect ho sakein.
+	Is case me tum DaemonSet use karte ho.
+	
+	📦 Use Cases (real examples):
+		• Logs collect karna (Fluentd, Filebeat)
+		• Node metrics lena (Prometheus Node Exporter)
+		• Network setup (Calico, Cilium)
+		• System monitoring tools
+	
+	🧾 Example YAML (basic):
+	
+	yaml
+	CopyEdit
+	apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: my-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: my-agent
+  template:
+    metadata:
+      labels:
+        app: my-agent
+    spec:
+      containers:
+      - name: my-container
+        image: busybox
+        command: ["/bin/sh", "-c", "while true; do echo Running on $(hostname); sleep 10; done"]
+	📝 Ye DaemonSet har node pe ek busybox container run karega jo bas echo karega.
+	
+	🧪 Commands:
+	
+	bash
+	CopyEdit
+	kubectl apply -f my-daemonset.yaml      # Deploy karo
+kubectl get daemonset                   # List all DaemonSets
+kubectl describe daemonset my-daemonset # Details dekho
+kubectl delete daemonset my-daemonset   # Delete karo
