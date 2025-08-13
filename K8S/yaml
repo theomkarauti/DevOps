@@ -1,0 +1,8 @@
+Basic Syntax of a .yaml File
+Each Kubernetes YAML has:
+
+	1. apiVersion – Which API version to use.
+	2. kind – The type of resource (e.g., Pod, Deployment).
+	3. metadata – Name, namespace, labels.
+ 
+spec – Specification of the desired behavior.
