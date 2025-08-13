@@ -1,0 +1,209 @@
+https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl/
+
+https://jamesdefabia.github.io/docs/hellonode/
+
+
+
+Lens :- https://k8slens.dev/
+
+https://home.robusta.dev/
+
+https://docs.robusta.dev/master/setup-robusta/installation/index.html
+
+https://docs.robusta.dev/master/setup-robusta/multi-cluster.html
+
+
+Labs with k8s:
+https://labs.play-with-k8s.com/
+https://killercoda.com/
+
+Tools:
+
+Mini kube -
+
+K9s -
+
+EKSCTL :-
+ 
+is the official CLI tool for creating, managing, and deleting Amazon EKS (Elastic Kubernetes Service) clusters on AWS.
+
+✅ Simple & Fast: Creates a fully functional EKS cluster with a single command.
+✅ Automates Node Group Setup: Easily adds and manages worker nodes.
+✅ IAM & Security: Automatically creates required IAM roles and security groups.
+✅ Supports Config Files: Allows declarative configuration for cluster management.
+
+
+A StatefulSet is a Kubernetes controller used for managing stateful applications. Unlike a Deployment, which is used for stateless applications, a StatefulSet ensures that the pods it manages have persistent identities and storage. This makes it well-suited for applications that require stable network identities, persistent storage, and ordered deployment and scaling (like databases or clustered applications).
+
+
+Use Cases:
+	• Databases: Databases such as MySQL, PostgreSQL, and Cassandra that require stable identities and persistent storage for each replica.
+	• Distributed Systems: Any stateful, distributed system that needs pods to have fixed identities, such as Kafka or Elasticsearch.
+	
+StatefulSet vs. Deployment:
+	• Deployment: Used for stateless applications where pods are interchangeable, and you don't need persistent storage or stable network identities.
+	• StatefulSet: Used for stateful applications where each pod has a unique identity, storage, and the need for controlled, ordered scaling and termination.
+
+
+
+
+
+A PersistentVolumeClaim (PVC) in Kubernetes is a request for storage by a user. It is how you request storage resources for your pods in Kubernetes. PVCs provide an abstraction over PersistentVolumes (PVs), which are the actual storage resources in the cluster.
+
+
+In k8s we can expose the service to the external word using two types:
+	1. Load balancing
+	2. Ingress service
+
+
+
+sudo modprobe br_netfilter
+sudo -i
+
+echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
+echo 1 > /proc/sys/net/ipv4/ip_forward
+exit
+
+
+
+kubeadm join 172.31.13.207:6443 --token 2qla2o.jyzoavz66y52ds3u \
+        --discovery-token-ca-cert-hash sha256:19ee7c39232ced63c6e66772207ce886fb130fe12a6902ad2b10adf9ce676228
+
+
+
+kubeadm join 172.31.13.207:6443 --token 2qla2o.jyzoavz66y52ds3u \
+        --discovery-token-ca-cert-hash sha256:19ee7c39232ced63c6e66772207ce886fb130fe12a6902ad2b10adf9ce676228
+
+
+   mkdir -p $HOME/.kube
+
+   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+   sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+=====================================================================================================
+
+controlled-d:
+	sudo systemctl restart containerd
+	
+	sudo systemctl status containerd
+	
+	kubectl get po -n kube-system
+	
+	sudo kubeadm reset -f
+	
+	sudo journalctl -u containerd -xe
+
+
+kubectl:
+	kubectl get pods --all-namespaces
+	
+	journalctl -u kubelet -f
+	
+	systemctl status kubelet
+	
+	kubectl get nodes
+
+	ssh -i "k8s.pem" ubuntu@ec2-15-207-100-10.ap-south-1.compute.amazonaws.com
+
+
+kubectl logs -n kube-system kube-apiserver-ip-172-31-3-34
+	
+sudo journalctl -u kubelet -f
+	 
+	 
+	sudo crictl ps -a | grep kube-apiserver
+
+1. Check kube-apiserver Logs:
+
+kubeadm join 172.31.28.23:6443 --token vnd716.iw7y056nn1baedes \
+        --discovery-token-ca-cert-hash sha256:1befe6407f1f93f9863dea22746b2b7aa943693759ff0a62bab3c1b0e9a06415
+	
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Kubectl get pods
+
+Kubectl get po
+
+Kubectl get ns
+
+
+
+kubectl delete serviceaccount admin-user -n kubernetes-Board
+
+kubectl delete clusterrolebinding admin-user
+
+kubectl delete deployment kubernetes-dashboard -n kubernetes-dashboard
+kubectl delete service kubernetes-dashboard -n kubernetes-dashboard
+kubectl delete deployment dashboard-metrics-scraper -n kubernetes-dashboard
+kubectl delete service dashboard-metrics-scraper -n kubernetes-dashboard
+
+kubectl delete namespace kubernetes-dashboard
+
+
+K = 
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+Img Pull error
+Authentication
+POD resources location
+kubectl Auth
+
+
+
+Experience:
+3
+Cluster:
+
+Dev:	
+		3Master Node:
+		8 Worker Nodes:
+
+Test:
+		3Master Node:
+		22 Worker Nodes:
+
+Prod:
+		3Master Node:
+		22 Worker Nodes:
+
+Cloud: AWS EKS, User Managed
+
+Volumes : EBS, EFS
+
+Networking: VPC
+
+Deployment: helm and Jenkins
+
+kubectl get event:
+
+https://www.youtube.com/watch?v=MFyukBiPV-g&list=PLYEK_dHOjwtOaTJrssJsDOgbObvrpeMpw
+
+25min --> k8s architecture
+
+core-dns ---> name-resolution
+ingress Controler --> only understand HTTP level traffic.
+CNI 
+
+metal lb --> On premises solution of ELB.
+
+split brain --> avoid  corruption ---> qurrom
+
+Master node communication when one master goes down to another one
+
+Algorith ---> To sync data in ETCD --> Raft concious algorith
+
+leader Node --> command
+
+3master node Balncer IP: to allocate nodes
+
+
+
+
+
