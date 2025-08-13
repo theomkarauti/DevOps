@@ -1,0 +1,229 @@
+• Pod
+-------------------------
+apiVersion:
+Kind:
+Metadata:
+	Labels:
+	Name:
+Spec:
+Container:
+Name: hello
+Image: ybmsr/nodeapp:v1
+Ports:
+Env:
+
+
+
+• Kubectl :
+
+kubectl get nodes
+Kubectl get pods
+kubectl get ns- lists all available namespaces in a K8s cluster.
+Kubectl get po -A
+
+• Namespaces:
+
+A namespace in Kubernetes is a logical unit that organizes resources within a cluster. 
+Namespaces allow for the isolation of resources, which can be useful when multiple teams or projects share a cluster.
+
+Kubectl get po -n kube-system - Retrieves information about all pods in a cluster.
+
+Kubectl get deploy
+Kubectl get rs -A 
+Kubrctl get svc
+
+Pod --> gone
+Self-healing & scaling --> replicaset 
+
+Kubectl get po
+Kubectl logs hello-pod
+Kubectl describe po hello-pod
+
+Kubectl get po hello-pod -o json
+Kubectl get po hello-pod -o wide
+
+Kubectl get pods --show-labels  
+
+sudo systemctl stop kubelet
+sudo systemctl start kubelet
+sudo systemctl status kubelet
+sudo systemctl restart kubelet
+
+journalctl -u kubelet -----> Kubectl Logs
+
+Name-spaces:
+
+1. Scope: A cluster is the full environment, while namespaces are sub-divisions within a cluster.
+2. Isolation: Namespaces allow for isolation within the same cluster, but a cluster cannot be isolated within another cluster unless managed separately.
+3. Usage: Clusters are typically used to separate completely different environments, while namespaces help organize within the same cluster.
+Would you like more detailed information on how to work with namespaces or clusters in Kubernetes?
+
+kubectl get nodes
+kubectl get namespaces
+kubectl cluster-info
+kubectl get pods --namespace=<namespace-name>
+
+
+Watch -
+
+kubectl get pods --all-namespaces
+kubectl get po -A
+kubectl get node
+kubeadm reset
+kubectl describe <pods>
+
+To go inside pod:
+kubectl get po -A | grep proxy
+kubectl exec -it <pod-name> -- <command>  ----->
+
+
+
+• Service Object:
+
+K8s - services.
+In Kubernetes, services help different parts of your application talk to each other. 
+They also allow users to access your app from outside the cluster.
+A Kubernetes Service is an abstraction that defines a logical set of Pods and a policy for accessing them. Since Pods are ephemeral and their IP addresses can change, Services provide a stable endpoint for communication.
+
+	ClusterIP --> internal
+	NodePort --> outside
+	LoadBalancer --> central URL for multiple nodes
+	ExternalName -->
+		• Maps a Kubernetes service to an external DNS name.
+		• Used to access external databases or APIs.
+		
+	
+
+Types of Services -
+
+Cluster IP :
+
+• Only accessible inside the cluster.
+• Used for communication between different pods.
+• Example: A database service that only the backend can access.
+
+
+NodePort  :
+
+• Opens a fixed port (e.g., 30007) on all nodes.
+• You can access it from outside the cluster using <NodeIP>:<NodePort>.
+• Example: Run a web app and access it via http://<NodeIP>:30007.
+
+LoadBalancer :
+
+• Creates a public IP (on cloud providers like AWS, GCP).
+• Ideal for exposing apps to the internet.
+• Example: Your website running on Kubernetes.
+
+ExternalName 
+
+• Redirects requests to an external domain (like example.com).
+• Example: Your app connects to an external database without hardcoding its IP.
+
+
+List all services:
+
+kubectl get svc
+
+kubectl describe svc my-service
+
+kubectl delete svc my-service
+
+Kubectl get svc ep --> Endpoints
+
+Kubectl get po -o wide
+
+Kubectl describe svc hello-svc  ---->
+
+
+• Deployment Controller:
+
+A Deployment Controller in Kubernetes is responsible for managing the deployment of applications by ensuring the desired state matches the actual state. It provides features like rolling updates, rollbacks, and scaling.
+
+• Rolling Updates – Ensures zero downtime when updating applications by gradually replacing old pods with new ones.
+• Rollback Support – If an update fails, it can revert to a previous stable version.
+• Scaling – Supports horizontal scaling of applications by increasing or decreasing the number of replicas.
+• Self-healing – If a pod crashes or is deleted, the Deployment Controller automatically recreates it.
+• Declarative Management – Users define the desired state in a YAML or JSON file, and Kubernetes ensures the system
+
+Working :
+• The user defines a Deployment manifest.
+• The Deployment Controller creates a ReplicaSet, which ensures the desired number of Pods are running.
+• If a new version is deployed, the Deployment Controller gradually replaces old Pods with new ones.
+• If the new deployment fails, it can be rolled back.
+
+• 1. RollingUpdate (Default)
+
+• maxUnavailable: Number (or percentage) of Pods that can be unavailable during the update.
+• maxSurge: Number (or percentage) of extra Pods that can be created temporarily.
+
+2. Recreate (Alternative)
+
+• Deletes all existing Pods before creating new ones.
+• Causes downtime but ensures a clean restart.
+
+
+
+
+
+  kubectl scale --replicas=3 -f foo.yaml
+
+  kubectl scale --current-replicas=2 --replicas=3 deployment/mysql
+
+  kubectl scale --replicas=3 statefulset/web
+
+
+Deamonset:
+
+A DaemonSet ensures that a copy of a Pod runs on every node (or a subset of nodes) in a Kubernetes cluster. 
+It's commonly used for system-level services like logging, monitoring, networking, or security agents.
+
+DaemonSet -
+
+• Log collection: Deploy Fluentd, Filebeat, or Logstash to collect logs from all nodes.
+• Monitoring agents: Run Prometheus Node Exporter or Datadog on all nodes.
+• Networking services: Use CNI plugins like Calico or Weave.
+• Storage daemons: Deploy Ceph or GlusterFS agents on every node.
+
+✅ Runs on all nodes by default.
+✅ Automatically schedules Pods on new nodes when they join the cluster.
+✅ Removes Pods from nodes when they are deleted from the cluster.
+✅ Can target specific nodes using node selectors or affinities.
+
+
+
+
+
+
+Cron Job:
+
+	
+A CronJob in Kubernetes allows you to run jobs on a scheduled basis, similar to Linux cron jobs. 
+It is useful for recurring tasks, such as backups, report generation, database cleanup, etc.
+ 
+
+K9s:
+
+Kubernetes (K8s) is the container orchestration platform itself, while K9s is a tool designed to enhance the management and monitoring of Kubernetes clusters through a terminal-based UI.
+
+
+Secrets:
+
+A secret is an object that contains a small amoubt of seseitive data such as password , a token, or akey.
+Such information might otherwise be put in a pod Specification or in an image.
+
+
+ReplicaSet vs. ReplicationController in K8s:
+
+
+
+
+
+Kubectl get secret mysecret -o json
+
+ 
+
+4. Scope: A cluster is the full environment, while namespaces are sub-divisions within a cluster.
+5. Isolation: Namespaces allow for isolation within the same cluster, but a cluster cannot be isolated within another cluster unless managed separately.
+6. Usage: Clusters are typically used to separate completely different environments, while namespaces help organize within the same cluster.
+Would you like more detailed information on how to work with namespaces or clusters in Kubernetes?
