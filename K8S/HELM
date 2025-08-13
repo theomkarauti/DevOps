@@ -1,0 +1,52 @@
+Helm is a pkg manager that used to install third party software to your cluster & K8s controller manager.
+
+Over time, the Kubernetes community discovered that creating and maintaining
+Kubernetes resources to deploy applications is difficult. This prompted the development
+of a simple yet powerful tool that would allow teams to overcome the challenges posed by
+deploying applications on Kubernetes. The tool that was created is called Helm. Helm is an
+open-source tool used for packaging and deploying applications on Kubernetes. It is often
+referred to as the Kubernetes Package Manager because of its similarities to any other
+package manager you would find on your favourite OS. Helm is widely used throughout the
+Kubernetes community and is a CNCF graduated project.
+
+
+Why ?
+
+Install
+Upgrade
+  
+Installation --?
+
+To check whether which cluster is currently running need to be installs:
+	---> kubectl config current-context
+	---> helm install
+
+Installation:
+https://helm.sh/docs/intro/install/
+
+
+
+A Helm chart is a package/bundle of pre-configured Kubernetes resources used to deploy and manage applications on a Kubernetes cluster.
+	All this chart are put into repository
+Release : name
+
+Helm search repo bitnami | grep promethus
+H helm install promethus bitnami/promethus
+H helm uninstall <pkg manager>
+H  helm shows values<chart name >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
