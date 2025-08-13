@@ -1,0 +1,208 @@
+Kubernetes Troubleshooting Guide
+
+1. Cluster-Level Issues
+Check Cluster Status 
+
+	kubectl cluster-info
+	
+	kubectl get nodes
+	
+	kubectl get component statuses
+	
+	kubectl get events --sort-by=.metadata.creationTimestamp
+	
+		○ Ensure all nodes are in Ready state.
+		○ Check if etcd, controller-manager, and scheduler are running.
+	
+Check Node Health
+
+	kubectl describe node <node-name>
+	
+	kubectl get nodes -o wide
+	
+	kubectl top node
+		○ Look for memory, CPU pressure, or disk space issues.
+		○ Check taints affecting scheduling.
+
+
+2. Pod & Deployment Issues
+Check Pod Status
+
+	kubectl get pods -A
+	
+	kubectl describe pod <pod-name> -n <namespace>
+	
+	kubectl logs <pod-name> -n <namespace>
+	
+	kubectl logs <pod-name> --previous  # Check logs of crashed pods
+	
+		○ Look for CrashLoopBackOff, ImagePullBackOff, or OOMKilled.
+
+Debugging a Failing Pod	
+	kubectl exec -it <pod-name> -- /bin/sh  # (Use bash if available)
+
+○ Check logs inside the pod:
+	
+	cat /var/log/<your-app-log>
+
+Check Events Related to the Pod
+
+	kubectl get events --sort-by=.metadata.creationTimestamp
+
+	• Look for scheduling, networking, or permission issues.
+
+Check StatefulSets & DaemonSets -
+
+	kubectl get statefulset
+	
+	kubectl get daemonset
+
+
+3. Service & Networking Issues
+
+Check Service Connectivity
+
+	kubectl get svc -A
+	
+	kubectl describe svc <service-name> -n <namespace>
+		○ Ensure the ClusterIP or LoadBalancer is assigned correctly.
+	
+Test Service Reachability
+
+	Inside a pod:
+	
+	curl http://<service-name>:<port>
+	
+	nslookup <service-name>
+	
+	Outside the cluster:
+	
+	kubectl port-forward svc/<service-name> <local-port>:<svc-port>
+
+Check DNS Issues
+
+	kubectl exec -it <pod-name> -- nslookup <service-name>
+	
+	kubectl exec -it <pod-name> -- cat /etc/resolv.conf
+
+
+4. Ingress & LoadBalancer Issues
+
+Check Ingress
+	
+	kubectl describe ingress <ingress-name> -n <namespace>.
+	
+		○ Ensure the correct host, path, and service mappings.
+
+Check LoadBalancer
+
+	kubectl get svc --field-selector=spec.type=LoadBalancer
+	
+		○ If external IP is <pending>, check cloud provider configuration.
+		
+Check Network Policies
+	
+	kubectl get networkpolicy -A
+	
+	kubectl describe networkpolicy <policy-name> -n <namespace>
+		○ Ensure traffic is allowed.
+
+
+5. Persistent Volume & Storage Issues
+Check Persistent Volume (PV) and Persistent Volume Claim (PVC)
+
+	kubectl get pv
+	
+	kubectl get pvc -A
+	
+	kubectl describe pvc <pvc-name> -n <namespace>
+	
+		○ Look for Pending or Lost states.
+		
+Check StorageClass
+
+	kubectl get storageclass
+	
+	kubectl describe storageclass <storage-class-name>
+	
+
+6. CrashLoopBackOff & OOMKilled
+Identify Restarting Pods
+	
+	kubectl get pods --field-selector=status.phase!=Running
+
+Check Reason for Crashes
+
+	kubectl describe pod <pod-name> -n <namespace>
+	
+		○ Look for ExitCode, Reason: OOMKilled, or CrashLoopBackOff.
+
+Increase Memory Limits (If OOMKilled)
+
+	Edit the deployment:
+	resources:
+  limits:
+    memory: "512Mi"
+  requests:
+    memory: "256Mi"
+	Apply the update:
+	kubectl apply -f deployment.yaml
+	
+	
+
+7. Logs & Monitoring
+View Logs
+
+	kubectl logs <pod-name> -n <namespace>
+	
+	kubectl logs <pod-name> --follow
+	
+	kubectl logs <pod-name> --tail=100
+	
+	/logs/appname.log
+
+Check System Logs (On Nodes)
+
+	  journalctl -u kubelet -f
+	
+	cat /var/log/syslog | grep kube
+
+Use Metrics Server
+
+	kubectl top pod
+	
+	kubectl top node
+	
+
+
+8. Debugging Helm Issues
+
+	helm list -A
+	
+	helm status <release-name>
+	
+	helm get values <release-name>
+	
+		○ Upgrade or rollback:
+	
+	helm rollback <release-name> <revision>
+	
+	helm upgrade --install <release-name> <chart>
+
+
+9. Common Fixes
+		○ Restart a pod: 
+		kubectl delete pod <pod-name> -n <namespace>
+		
+		○ Restart a deployment: 
+		kubectl rollout restart deployment <deployment-name> -n <namespace>
+		
+		Restart a node: 
+		sudo systemctl restart kubelet
+		
+		○ Restart all pods in a namespace: 
+		kubectl delete pods --all -n <namespace>
+
+
+
+
